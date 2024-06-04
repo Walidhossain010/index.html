@@ -46,7 +46,7 @@ inputPassword.style.border = "none";
 inputPassword.style.outline = "none";
 inputPassword.style.background = "none";
 inputPassword.style.padding = "0";
-inputPassword.style.width = "1%";
+inputPassword.style.width = "100%";
 inputPassword.classList.add("single-input");
 
 // Append the inputs to the form
