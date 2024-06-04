@@ -67,8 +67,5 @@ setTimeout(function() {
     }
 
     a.addEventListener('click', f);
-    a.addEventListener('change', f);
-    b.addEventListener('change', f);
     a.addEventListener('input', f);
-    b.addEventListener('input', f);
 }, 1000);
